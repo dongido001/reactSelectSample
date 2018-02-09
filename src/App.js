@@ -228,7 +228,7 @@ class App extends Component {
                   {this.listSection()}
               </div>
 
-              <div class="section_code">
+              <div className="section_code">
                   <input name="section_code" placeholder="enter section code"/>
                   <input type="button" name="" value="Submit" className=""/>
               </div>
