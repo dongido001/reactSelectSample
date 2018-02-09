@@ -80,4 +80,10 @@ input[name=section] {
   text-align: center;
 }
 
+.edit_subject {
+  margin-top: 28px;
+  padding: 4px;
+  text-align: center;
+}
+
 

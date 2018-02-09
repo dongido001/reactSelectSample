@@ -23,6 +23,8 @@ class App extends Component {
         {id: 1, subject_id: 1, name: 'Numers and numeration'},
         {id: 2, subject_id: 1, name: 'fisher got you'}
       ],
+      editSubject: false,
+      editingSubject: '',
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -54,6 +56,23 @@ class App extends Component {
     this.listSection();
   }
 
+  editSubject(event) {
+    let subject_id = event.currentTarget.dataset.subject_id;
+    let subject = this.state.subjects.filter(function( obj ) {
+      return obj.id == subject_id;
+    });
+
+    this.setState({
+      editSubject: true,
+      editingSubject: subject[0].name
+    });
+
+  }
+
+  saveSubject() {
+    this.setState({editSubject: false,});
+  }
+
   addSubject(subject_name) {
 
     if (this.state.subject === '') {
@@ -72,11 +91,9 @@ class App extends Component {
       return {
         subjects: subjects,
         subjectKey: subjectKey,
+        subject: '', // reset the subject
       }
     });
-    
-    // reset the subject
-    this.setState({subject: ''});
   }
 
   // we would remove selected subject when the - button is clicked...
@@ -196,9 +213,19 @@ class App extends Component {
                  name={subject.name} 
                  selectSubject={(event) => this.selectSubject(event)}
                  subject_id={subject.id}
+                 onDoubleClick={(event) => this.editSubject(event)}
             />
-        )
+        )       
     })
+
+    let editDiv = null;
+    if (this.state.editSubject){
+      editDiv = <EditSubject editingSubject={this.state.editingSubject} handleChange={this.handleChange}/>;
+    }
+    else {
+      editDiv = null;
+    }
+
     return (
       <div className="App">
         <header className="App-header">
@@ -216,6 +243,7 @@ class App extends Component {
               <div id="subject">
                 {listSubject}
               </div>
+             {editDiv}
           </div>
             <div className="form-group">
               <div>
@@ -227,7 +255,7 @@ class App extends Component {
               <div id="section">
                   {this.listSection()}
               </div>
-
+  
               <div className="section_code">
                   <input name="section_code" placeholder="enter section code"/>
                   <input type="button" name="" value="Submit" className=""/>
@@ -242,8 +270,22 @@ class App extends Component {
 class Subject extends Component {
   render(){
     return (
-      <div className="subject" onClick={(event) => this.props.selectSubject(event) } data-subject_id={this.props.subject_id}> 
+      <div className="subject" 
+           onDoubleClick={(event) => this.props.onDoubleClick(event)}
+           onClick={(event) => this.props.selectSubject(event) } 
+           data-subject_id={this.props.subject_id}> 
         {this.props.name}
+      </div>
+    );
+  }
+}
+
+class EditSubject extends Component {
+  render(){
+    return (
+      <div className="edit_subject">
+        <input name="editingSubject" placeholder="edit subject" value={this.props.editingSubject} onChange={this.props.handleChange}/>
+        <input type="button" name="" value="Save" className=""/>
       </div>
     );
   }
